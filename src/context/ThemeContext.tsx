@@ -2,9 +2,11 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
+  useContext,
   useEffect,
   useState,
 } from "react";
+
 import { getInitialTheme, rawSetTheme } from "../utils/contextHelpers";
 
 type ThemeContextType = {
@@ -12,13 +14,12 @@ type ThemeContextType = {
   setTheme: Dispatch<SetStateAction<Theme>>;
 };
 
-export const ThemeContext = createContext<ThemeContextType | null>(null);
+export const ThemeContext = createContext<ThemeContextType>(
+  {} as ThemeContextType
+);
 
-export const ThemeProvider = ({ initialTheme, children }: ContextProps) => {
+const ThemeProvider = ({ children }: ContextProps) => {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
-
-  // set there is a initial theme set theme
-  if (initialTheme) rawSetTheme(initialTheme);
 
   useEffect(() => {
     rawSetTheme(theme);
@@ -29,4 +30,11 @@ export const ThemeProvider = ({ initialTheme, children }: ContextProps) => {
       {children}
     </ThemeContext.Provider>
   );
+};
+
+export default ThemeProvider;
+
+export const useTheme = () => {
+  const themeContext = useContext(ThemeContext);
+  return themeContext;
 };

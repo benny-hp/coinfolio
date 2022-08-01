@@ -5,15 +5,20 @@ import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
-import { ThemeProvider } from "../context/ThemeContext";
+import Navbar from "../components/Navbar";
+import dynamic from "next/dynamic";
 
+const ThemeProvider = dynamic(() => import("../context/ThemeContext"), {
+  ssr: false,
+});
 const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
     <SessionProvider session={session}>
-      <ThemeProvider initialTheme="light">
+      <ThemeProvider>
+        <Navbar></Navbar>
         <Component {...pageProps} />
       </ThemeProvider>
     </SessionProvider>
