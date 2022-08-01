@@ -1,7 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useQuery } from "react-query";
+import CoinSearch from "../components/CoinSearch";
+import { coinMarketData } from "../services/coingecko.api";
+import { Market } from "../types/coingecko";
 
 const Home: NextPage = () => {
+  const { data, error } = useQuery<Market[], Error>("coins", coinMarketData);
+
   return (
     <>
       <Head>
@@ -10,9 +16,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto flex flex-col items-center justify-center h-screen p-4">
-        app
-      </main>
+      <main>{data && <CoinSearch coins={data} />}</main>
     </>
   );
 };
