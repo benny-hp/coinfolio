@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import { useQuery } from "react-query";
+import { coinMarketData } from "../../services/coingecko.api";
 import { Market } from "../../types/coingecko";
 import CoinItem from "./CoinItem";
-type Props = {
-  coins: Market[];
-};
-const CoinSearch = ({ coins }: Props) => {
+
+const CoinSearch = () => {
   const [searchText, setSearchText] = useState("");
+  const { data: coins, error } = useQuery<Market[], Error>(
+    "coins",
+    coinMarketData
+  );
   return (
     <div className="rounded-div my-4">
       <div className="flex flex-col md:flex-row justify-between pt-4 pb-6 text-center md:text-right">
@@ -35,17 +39,16 @@ const CoinSearch = ({ coins }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {coins
-            .filter((value) => {
-              if (searchText === "") return value;
+          {coins &&
+            coins
+              .filter((value) => {
+                if (searchText === "") return value;
 
-              return value.name
-                .toLocaleLowerCase()
-                .includes(searchText.toLocaleLowerCase());
-            })
-            .map((coin) => (
-              <CoinItem coin={coin} key={coin.id} />
-            ))}
+                return value.name
+                  .toLocaleLowerCase()
+                  .includes(searchText.toLocaleLowerCase());
+              })
+              .map((coin) => <CoinItem coin={coin} key={coin.id} />)}
         </tbody>
       </table>
     </div>

@@ -1,10 +1,10 @@
-export interface Roi {
+interface Roi {
   times: number;
   currency: string;
   percentage: number;
 }
 
-export interface SparklineIn7d {
+interface SparklineIn7d {
   price: number[];
 }
 
@@ -41,4 +41,29 @@ export interface Market {
 export interface GetCoinMarketData {
   data: Market | null;
   error: string | null;
+}
+
+// trending
+
+interface Item {
+  id: string;
+  coin_id: number;
+  name: string;
+  symbol: string;
+  market_cap_rank: number;
+  thumb: string;
+  small: string;
+  large: string;
+  slug: string;
+  price_btc: number;
+  score: number;
+}
+
+interface Coin {
+  item: Item;
+}
+
+export interface Trending {
+  coins: Coin[];
+  exchanges: any[];
 }
