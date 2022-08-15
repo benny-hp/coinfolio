@@ -61,7 +61,8 @@ model VerificationToken {
 }
 
 model Coin {
-    id     String  @unique
+    coinId String  @id @default(cuid())
+    id     String
     name   String
     image  String
     rank   Int
