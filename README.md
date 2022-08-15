@@ -30,12 +30,12 @@ Coin Folio is a full-stack cryptocurrency web application design to help users t
 
     # Next Auth
 
-    NEXTAUTH_SECRET=<<some secret>>
+    NEXTAUTH_SECRET=<<some-secret>>
     NEXTAUTH_URL=http://localhost:3000
 
     # Next Auth Google Provider
 
-    GOOGLE_CLIENT_ID=<<client id>>
+    GOOGLE_CLIENT_ID=<<client-id>>
     GOOGLE_CLIENT_SECRET=<<secret>>
    ```
 
