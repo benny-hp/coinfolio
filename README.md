@@ -24,7 +24,7 @@ Coin Folio is a full-stack cryptocurrency web application design to help users t
 1. add env.local file in root directory
 
    ```env
-   # Prisma
+    # Prisma
 
     DATABASE_URL=file:./db.sqlite
 
