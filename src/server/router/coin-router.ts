@@ -77,7 +77,7 @@ export const coinRouter = createProtectedRouter()
       try {
         await ctx.prisma.coin.delete({
           where: {
-            id: input.id,
+            coinId: coin.coinId,
           },
         });
         return "success";
