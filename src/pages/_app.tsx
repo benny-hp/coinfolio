@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import dynamic from "next/dynamic";
+import Footer from "../components/Footer";
 
 const ThemeProvider = dynamic(() => import("../context/ThemeContext"), {
   ssr: false,
@@ -20,6 +21,7 @@ const MyApp: AppType = ({
       <ThemeProvider>
         <Navbar></Navbar>
         <Component {...pageProps} />
+        <Footer />
       </ThemeProvider>
     </SessionProvider>
   );
