@@ -49,6 +49,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    coins         Coin[]
 }
 
 model VerificationToken {
@@ -57,4 +58,14 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Coin {
+    id     String  @unique
+    name   String
+    image  String
+    rank   Int
+    symbol String
+    User   User?   @relation(fields: [userId], references: [id])
+    userId String?
 }
