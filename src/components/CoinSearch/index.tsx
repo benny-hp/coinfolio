@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { coinMarketData } from "../../services/coingecko.api";
 import { Market } from "../../types/coingecko";
+import { trpc } from "../../utils/trpc";
 import CoinItem from "./CoinItem";
 
 const CoinSearch = () => {
   const [searchText, setSearchText] = useState("");
+  const { status } = useSession();
+  const { data: savedCoins } = trpc.useQuery(["coin.getAll"], {
+    enabled: status === "authenticated",
+  });
+
   const { data: coins, error } = useQuery<Market[], Error>(
     "coins",
     coinMarketData
@@ -48,7 +55,17 @@ const CoinSearch = () => {
                   .toLocaleLowerCase()
                   .includes(searchText.toLocaleLowerCase());
               })
-              .map((coin) => <CoinItem coin={coin} key={coin.id} />)}
+              .map((coin) => {
+                const saved = savedCoins?.find((c) => c.id === coin.id);
+
+                return (
+                  <CoinItem
+                    coin={coin}
+                    key={coin.id}
+                    saved={!saved ? false : true}
+                  />
+                );
+              })}
         </tbody>
       </table>
     </div>

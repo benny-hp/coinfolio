@@ -1,28 +1,64 @@
-import React from "react";
-import { AiOutlineStar } from "react-icons/ai";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { Sparklines, SparklinesLine } from "react-sparklines";
 import { Market } from "../../types/coingecko";
+import { trpc } from "../../utils/trpc";
 
 type Props = {
   coin: Market;
+  saved: boolean;
 };
 
-const CoinItem = ({ coin }: Props) => {
+const CoinItem = ({ coin, saved }: Props) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [savedCoin, setSavedCoin] = useState(saved);
+  const coinCtx = trpc.useContext();
+  const { mutate } = trpc.useMutation(["coin.save"], {
+    onSuccess() {
+      setSavedCoin(true);
+      coinCtx.invalidateQueries("coin.getAll");
+    },
+  });
+  const saveCoin = () => {
+    if (session?.user) {
+      mutate({
+        id: coin.id,
+        name: coin.name,
+        image: coin.image,
+        rank: coin.market_cap_rank,
+        symbol: coin.symbol,
+      });
+    } else {
+      router.push("/signin");
+    }
+  };
   return (
     <tr className="h-[80px] border-b overflow-hidden">
-      <td>
-        <AiOutlineStar />
+      <td onClick={saveCoin}>
+        {savedCoin ? (
+          <AiFillStar className="text-orange-500" />
+        ) : (
+          <AiOutlineStar />
+        )}
       </td>
       <td>{coin.market_cap_rank}</td>
       <td>
-        <div className="flex items-center">
-          <img
-            className="w-6 mr-2 rounded-full"
-            src={coin.image}
-            alt={coin.id}
-          />
-          <p className="hidden sm:table-cell">{coin.name}</p>
-        </div>
+        <Link href={`/coin/${coin.id}`}>
+          <a>
+            <div className="flex items-center">
+              <img
+                className="w-6 mr-2 rounded-full"
+                src={coin.image}
+                alt={coin.id}
+              />
+              <p className="hidden sm:table-cell">{coin.name}</p>
+            </div>
+          </a>
+        </Link>
       </td>
       <td>{coin.symbol.toUpperCase()}</td>
       <td>${coin.current_price.toLocaleString()}</td>
