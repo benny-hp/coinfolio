@@ -8,15 +8,19 @@ import CoinItem from "./CoinItem";
 
 const CoinSearch = () => {
   const [searchText, setSearchText] = useState("");
+  const [page, setPage] = useState(1);
   const { status } = useSession();
-  const { data: savedCoins } = trpc.useQuery(["coin.getAll"], {
+  const { data: savedCoins, isLoading } = trpc.useQuery(["coin.getAll"], {
     enabled: status === "authenticated",
   });
 
-  const { data: coins, error } = useQuery<Market[], Error>(
-    "coins",
-    coinMarketData
-  );
+  const {
+    data: coins,
+    error,
+    isPreviousData,
+  } = useQuery<Market[], Error>(["coins", page], () => coinMarketData(page), {
+    keepPreviousData: true,
+  });
   return (
     <div className="rounded-div my-4">
       <div className="flex flex-col md:flex-row justify-between pt-4 pb-6 text-center md:text-right">
@@ -46,7 +50,7 @@ const CoinSearch = () => {
           </tr>
         </thead>
         <tbody>
-          {coins &&
+          {!isLoading && coins ? (
             coins
               .filter((value) => {
                 if (searchText === "") return value;
@@ -65,9 +69,41 @@ const CoinSearch = () => {
                     saved={!saved ? false : true}
                   />
                 );
-              })}
+              })
+          ) : (
+            <p>...loading</p>
+          )}
         </tbody>
       </table>
+      <div className="my-4">
+        <span># {page}</span>
+        <button
+          className={`border ml-4 px-6 py-2 rounded-l-full ${
+            page === 1
+              ? "hover:shadow-none bg-gray-100 text-gray-800"
+              : "hover:shadow-2xl"
+          }`}
+          onClick={() => setPage((old) => Math.max(old - 1, 0))}
+          disabled={page === 1}
+        >
+          Previous Page
+        </button>
+        <button
+          className={`border px-6 py-2 rounded-r-full ${
+            coins?.length === 0
+              ? "hover:shadow-none bg-gray-100"
+              : "hover:shadow-2xl"
+          }`}
+          onClick={() => {
+            if (!isPreviousData) {
+              setPage((old) => old + 1);
+            }
+          }}
+          disabled={coins?.length === 0}
+        >
+          Next Page
+        </button>
+      </div>
     </div>
   );
 };

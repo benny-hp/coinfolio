@@ -8,7 +8,7 @@ const SaveCoins = () => {
   const coinCtx = trpc.useContext();
   const { mutate } = trpc.useMutation(["coin.remove"], {
     async onMutate(variables) {
-      await coinCtx.cancelQuery(["coin.getAll"]);
+      // await coinCtx.cancelQuery(["coin.getAll"]);
 
       const preCoins = coinCtx.getQueryData(["coin.getAll"]);
 

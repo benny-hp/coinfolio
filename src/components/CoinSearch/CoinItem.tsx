@@ -20,7 +20,7 @@ const CoinItem = ({ coin, saved }: Props) => {
   const { mutate: save } = trpc.useMutation(["coin.save"], {
     async onMutate() {
       // cancel ongoing refetches
-      await coinCtx.cancelQuery(["coin.getAll"]);
+      // await coinCtx.cancelQuery(["coin.getAll"]);
 
       setSavedCoin(true);
     },
@@ -30,7 +30,7 @@ const CoinItem = ({ coin, saved }: Props) => {
   });
   const { mutate: remove } = trpc.useMutation(["coin.remove"], {
     async onMutate() {
-      await coinCtx.cancelQuery(["coin.getAll"]);
+      // await coinCtx.cancelQuery(["coin.getAll"]);
 
       setSavedCoin(false);
     },
@@ -56,7 +56,7 @@ const CoinItem = ({ coin, saved }: Props) => {
   };
   return (
     <tr className="h-[80px] border-b overflow-hidden">
-      <td onClick={saveCoin}>
+      <td className="cursor-pointer" onClick={saveCoin}>
         {savedCoin ? (
           <AiFillStar className="text-orange-500" />
         ) : (

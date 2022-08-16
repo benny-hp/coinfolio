@@ -5,10 +5,10 @@ const api = axios.create({
   baseURL: "https://api.coingecko.com/api/v3",
 });
 
-export async function coinMarketData() {
+export async function coinMarketData(page: number = 1) {
   return api
     .get<Market[]>(
-      "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=true"
+      `/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=${page}&sparkline=true`
     )
     .then((data) => data.data)
     .catch(() => {
