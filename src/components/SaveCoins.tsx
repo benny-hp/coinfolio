@@ -7,7 +7,24 @@ const SaveCoins = () => {
   const { data: coins } = trpc.useQuery(["coin.getAll"]);
   const coinCtx = trpc.useContext();
   const { mutate } = trpc.useMutation(["coin.remove"], {
-    onSuccess() {
+    async onMutate(variables) {
+      await coinCtx.cancelQuery(["coin.getAll"]);
+
+      const preCoins = coinCtx.getQueryData(["coin.getAll"]);
+
+      coinCtx.setQueryData(["coin.getAll"], (old) => {
+        if (old) {
+          return [...old?.filter((coin) => coin.id !== variables.id)];
+        }
+        return [];
+      });
+
+      return { preCoins };
+    },
+    onError(_error, _variables, context) {
+      coinCtx.setQueryData(["coin.getAll"], context?.preCoins || []);
+    },
+    onSettled() {
       coinCtx.invalidateQueries(["coin.getAll"]);
     },
   });

@@ -62,30 +62,23 @@ export const coinRouter = createProtectedRouter()
       id: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const coin = await ctx.prisma.coin.findFirst({
-        where: {
-          id: input.id,
-          userId: ctx.session.user.id,
-        },
-      });
-      if (!coin) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Coin not found",
-        });
-      }
-      try {
-        await ctx.prisma.coin.delete({
-          where: {
-            coinId: coin.coinId,
-          },
-        });
-        return "success";
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "There was an error removing the coins",
-        });
+      if (ctx.session.user.id) {
+        try {
+          await ctx.prisma.coin.delete({
+            where: {
+              id_userId: {
+                id: input.id,
+                userId: ctx.session.user.id,
+              },
+            },
+          });
+          return "success";
+        } catch (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "There was an error removing the coins",
+          });
+        }
       }
     },
   });

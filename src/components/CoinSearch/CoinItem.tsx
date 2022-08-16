@@ -17,21 +17,39 @@ const CoinItem = ({ coin, saved }: Props) => {
   const router = useRouter();
   const [savedCoin, setSavedCoin] = useState(saved);
   const coinCtx = trpc.useContext();
-  const { mutate } = trpc.useMutation(["coin.save"], {
-    onSuccess() {
+  const { mutate: save } = trpc.useMutation(["coin.save"], {
+    async onMutate() {
+      // cancel ongoing refetches
+      await coinCtx.cancelQuery(["coin.getAll"]);
+
       setSavedCoin(true);
+    },
+    onSettled() {
+      coinCtx.invalidateQueries("coin.getAll");
+    },
+  });
+  const { mutate: remove } = trpc.useMutation(["coin.remove"], {
+    async onMutate() {
+      await coinCtx.cancelQuery(["coin.getAll"]);
+
+      setSavedCoin(false);
+    },
+    onSettled() {
       coinCtx.invalidateQueries("coin.getAll");
     },
   });
   const saveCoin = () => {
     if (session?.user) {
-      mutate({
-        id: coin.id,
-        name: coin.name,
-        image: coin.image,
-        rank: coin.market_cap_rank,
-        symbol: coin.symbol,
-      });
+      if (!savedCoin) {
+        save({
+          id: coin.id,
+          name: coin.name,
+          image: coin.image,
+          rank: coin.market_cap_rank,
+          symbol: coin.symbol,
+        });
+      }
+      if (savedCoin) remove({ id: coin.id });
     } else {
       router.push("/signin");
     }

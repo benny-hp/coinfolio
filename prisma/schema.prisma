@@ -61,12 +61,13 @@ model VerificationToken {
 }
 
 model Coin {
-    coinId String  @id @default(cuid())
     id     String
     name   String
     image  String
     rank   Int
     symbol String
-    User   User?   @relation(fields: [userId], references: [id])
-    userId String?
+    User   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    @@unique([id, userId])
 }
