@@ -7,10 +7,11 @@ import { coinById } from "../../services/coingecko.api";
 import { Coin } from "../../types/coingecko";
 import { FaFacebook, FaGithub, FaReddit, FaTwitter } from "react-icons/fa";
 import DOMPurify from "dompurify";
+import { CircleLoader } from "react-spinners";
 
 const Coin: NextPage = () => {
   const router = useRouter();
-  const { data, error, isLoading } = useQuery<Coin, Error>(
+  const { data, error, isLoading, isError } = useQuery<Coin, Error>(
     ["coin", router.query.coinId],
     () => coinById(router.query.coinId as string),
     {
@@ -19,8 +20,15 @@ const Coin: NextPage = () => {
   );
   if (isLoading) {
     return (
-      <div className="rounded-div my-12 py-8 h-[85vh]">
-        <p className="text-center text-2xl">loading...</p>
+      <div className="rounded-div my-4 py-8 h-[85vh] flex items-center justify-center">
+        <CircleLoader color="#2b6cb0" size={80} />
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="rounded-div my-4 py-8 h-[85vh] flex  justify-center">
+        <p className="text-red-500 font-bold text-xl">{error?.message}</p>
       </div>
     );
   }

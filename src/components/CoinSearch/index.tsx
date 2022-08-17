@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
+import { CircleLoader } from "react-spinners";
 import { coinMarketData } from "../../services/coingecko.api";
 import { Market } from "../../types/coingecko";
 import { trpc } from "../../utils/trpc";
@@ -18,9 +19,34 @@ const CoinSearch = () => {
     data: coins,
     error,
     isPreviousData,
+    isLoading: isMarketLoading,
+    isError,
   } = useQuery<Market[], Error>(["coins", page], () => coinMarketData(page), {
     keepPreviousData: true,
   });
+
+  if (isError) {
+    return (
+      <div className="rounded-div my-4">
+        <div className="flex flex-col md:flex-row justify-between pt-4 pb-6 text-center md:text-right">
+          <h1 className="text-2xl font-bold my-2">Search Crypto</h1>
+          <form>
+            <input
+              type="text"
+              placeholder="Search a coin"
+              className="w-full bg-primary border border-input px-4 py-2 rounded-2xl shadow-xl"
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </form>
+        </div>
+        <div className="h-[55vh] flex  justify-center">
+          <p className="text-red-500 font-bold text-xl mt-3">
+            {error?.message}
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="rounded-div my-4">
       <div className="flex flex-col md:flex-row justify-between pt-4 pb-6 text-center md:text-right">
@@ -50,7 +76,8 @@ const CoinSearch = () => {
           </tr>
         </thead>
         <tbody>
-          {!isLoading && coins ? (
+          {!isLoading &&
+            coins &&
             coins
               .filter((value) => {
                 if (searchText === "") return value;
@@ -69,12 +96,14 @@ const CoinSearch = () => {
                     saved={!saved ? false : true}
                   />
                 );
-              })
-          ) : (
-            <p>...loading</p>
-          )}
+              })}
         </tbody>
       </table>
+      {(isMarketLoading || isLoading) && (
+        <div className="h-[60vh] flex items-center justify-center">
+          <CircleLoader className="text-red-400" color="#2b6cb0" size={80} />
+        </div>
+      )}
       <div className="my-4">
         <span># {page}</span>
         <button
