@@ -14,6 +14,8 @@ const Footer = () => {
           <a
             href="https://www.bennyhernandez.com/"
             className="py-2 hover:text-accent"
+            target="_blank"
+            rel="noreferrer"
           >
             Benny Hernandez
           </a>
@@ -24,12 +26,16 @@ const Footer = () => {
             <a
               className="hover:text-accent"
               href="https://github.com/Nomad-Freedom"
+              target="_blank"
+              rel="noreferrer"
             >
               <FaGithub size={20} />
             </a>
             <a
               className="hover:text-accent"
               href="https://www.linkedin.com/in/benny-hernandez/"
+              target="_blank"
+              rel="noreferrer"
             >
               <FaLinkedinIn size={20} />
             </a>
