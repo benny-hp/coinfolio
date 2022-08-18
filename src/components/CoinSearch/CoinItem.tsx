@@ -78,7 +78,11 @@ const CoinItem = ({ coin, saved }: Props) => {
           </a>
         </Link>
       </td>
-      <td>{coin.symbol.toUpperCase()}</td>
+      <td>
+        <Link href={`/coin/${coin.id}`}>
+          <a className="w-full inline-block">{coin.symbol.toUpperCase()}</a>
+        </Link>
+      </td>
       <td>${coin.current_price.toLocaleString()}</td>
       <td>
         {coin.price_change_percentage_24h > 0 ? (
