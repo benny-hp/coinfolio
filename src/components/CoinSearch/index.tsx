@@ -3,13 +3,16 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { CircleLoader } from "react-spinners";
 import { coinMarketData } from "../../services/coingecko.api";
+import { usePageStore } from "../../store/page.store";
 import { Market } from "../../types/coingecko";
 import { trpc } from "../../utils/trpc";
 import CoinItem from "./CoinItem";
 
 const CoinSearch = () => {
   const [searchText, setSearchText] = useState("");
-  const [page, setPage] = useState(1);
+  const page = usePageStore((state) => state.page);
+  const next = usePageStore((state) => state.next);
+  const previous = usePageStore((state) => state.previous);
   const { status } = useSession();
   const { data: savedCoins, isLoading } = trpc.useQuery(["coin.getAll"], {
     enabled: status === "authenticated",
@@ -112,7 +115,7 @@ const CoinSearch = () => {
               ? "hover:shadow-none bg-gray-100 text-gray-800"
               : "hover:shadow-2xl"
           }`}
-          onClick={() => setPage((old) => Math.max(old - 1, 0))}
+          onClick={previous}
           disabled={page === 1}
         >
           Previous Page
@@ -125,7 +128,7 @@ const CoinSearch = () => {
           }`}
           onClick={() => {
             if (!isPreviousData) {
-              setPage((old) => old + 1);
+              next();
             }
           }}
           disabled={coins?.length === 0}
