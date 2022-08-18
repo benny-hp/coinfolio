@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { CircleLoader } from "react-spinners";
+import { animateScroll as scroll } from "react-scroll";
 import { coinMarketData } from "../../services/coingecko.api";
 import { usePageStore } from "../../store/page.store";
 import { Market } from "../../types/coingecko";
@@ -15,7 +15,6 @@ const CoinSearch = () => {
   const next = usePageStore((state) => state.next);
   const previous = usePageStore((state) => state.previous);
   const { status } = useSession();
-  const router = useRouter();
   const { data: savedCoins, isLoading } = trpc.useQuery(["coin.getAll"], {
     enabled: status === "authenticated",
   });
@@ -118,7 +117,7 @@ const CoinSearch = () => {
               : "hover:shadow-2xl"
           }`}
           onClick={() => {
-            router.push("/#home");
+            scroll.scrollTo(100, { delay: 300 });
             previous();
           }}
           disabled={page === 1}
@@ -133,7 +132,7 @@ const CoinSearch = () => {
           }`}
           onClick={() => {
             if (!isPreviousData) {
-              router.push("/#home");
+              scroll.scrollTo(100, { delay: 300 });
               next();
             }
           }}
