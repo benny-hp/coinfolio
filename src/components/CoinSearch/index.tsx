@@ -1,4 +1,5 @@
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { CircleLoader } from "react-spinners";
@@ -14,6 +15,7 @@ const CoinSearch = () => {
   const next = usePageStore((state) => state.next);
   const previous = usePageStore((state) => state.previous);
   const { status } = useSession();
+  const router = useRouter();
   const { data: savedCoins, isLoading } = trpc.useQuery(["coin.getAll"], {
     enabled: status === "authenticated",
   });
@@ -51,7 +53,7 @@ const CoinSearch = () => {
     );
   }
   return (
-    <div className="rounded-div my-4">
+    <div className="rounded-div my-4" id="home">
       <div className="flex flex-col md:flex-row justify-between pt-4 pb-6 text-center md:text-right">
         <h1 className="text-2xl font-bold my-2">Search Crypto</h1>
         <form>
@@ -115,7 +117,10 @@ const CoinSearch = () => {
               ? "hover:shadow-none bg-gray-100 text-gray-800"
               : "hover:shadow-2xl"
           }`}
-          onClick={previous}
+          onClick={() => {
+            router.push("/#home");
+            previous();
+          }}
           disabled={page === 1}
         >
           Previous Page
@@ -128,6 +133,7 @@ const CoinSearch = () => {
           }`}
           onClick={() => {
             if (!isPreviousData) {
+              router.push("/#home");
               next();
             }
           }}
