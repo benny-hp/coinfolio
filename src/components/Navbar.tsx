@@ -74,11 +74,14 @@ const Navbar = () => {
               <a onClick={handleNav}>Home</a>
             </Link>
           </li>
-          <li className="border-b py-6">
-            <Link href={"/account"}>
-              <a onClick={handleNav}>Account</a>
-            </Link>
-          </li>
+          {session?.user && (
+            <li className="border-b py-6">
+              <Link href={"/account"}>
+                <a onClick={handleNav}>Account</a>
+              </Link>
+            </li>
+          )}
+
           <li className="py-6">
             <ThemeToggle />
           </li>
