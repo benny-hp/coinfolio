@@ -4,7 +4,6 @@
 
 :root {
   @apply bg-primary text-primary;
-  @apply scroll-smooth;
 }
 
 .rounded-div {
