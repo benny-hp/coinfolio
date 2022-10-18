@@ -48,7 +48,7 @@ const Coin: NextPage = () => {
           <div className="flex justify-between">
             {data?.market_data?.current_price ? (
               <p className="text-3xl font-bold">
-                ${data.market_data.current_price.usd.toLocaleString()}
+                ${data?.market_data?.current_price?.usd?.toLocaleString()}
               </p>
             ) : null}
             <p>7 Day</p>
@@ -62,13 +62,13 @@ const Coin: NextPage = () => {
             <div>
               <p className="text-gray-500 text-sm ">Market Cap</p>
               {data?.market_data.market_cap ? (
-                <p>${data.market_data.market_cap.usd.toLocaleString()}</p>
+                <p>${data?.market_data?.market_cap?.usd?.toLocaleString()}</p>
               ) : null}
             </div>
             <div>
               <p className="text-gray-500 text-sm text-right">Volume (24h)</p>
               {data?.market_data.total_volume ? (
-                <p>${data.market_data.total_volume.usd.toLocaleString()}</p>
+                <p>${data?.market_data?.total_volume?.usd?.toLocaleString()}</p>
               ) : null}
             </div>
           </div>
@@ -77,13 +77,13 @@ const Coin: NextPage = () => {
             <div>
               <p className="text-gray-500 text-sm">24h High</p>
               {data?.market_data.high_24h ? (
-                <p>${data.market_data.high_24h.usd.toLocaleString()}</p>
+                <p>${data?.market_data?.high_24h?.usd?.toLocaleString()}</p>
               ) : null}
             </div>
             <div>
               <p className="text-gray-500 text-sm text-right">24h Low</p>
               {data?.market_data.low_24h ? (
-                <p>${data.market_data.low_24h.usd.toLocaleString()}</p>
+                <p>${data?.market_data?.low_24h?.usd?.toLocaleString()}</p>
               ) : null}
             </div>
           </div>
@@ -112,7 +112,7 @@ const Coin: NextPage = () => {
               <p className="text-gray-500 text-sm">Price Change (24h)</p>
               {data?.market_data ? (
                 <p>
-                  {data.market_data.price_change_percentage_24h.toFixed(2)}%
+                  {data?.market_data?.price_change_percentage_24h?.toFixed(2)}%
                 </p>
               ) : null}
             </div>
