@@ -103,7 +103,7 @@ const Coin: NextPage = () => {
             </div>
             <div>
               <p className="text-gray-500 text-sm">Trust Score</p>
-              <p>{data?.liquidity_score.toFixed(2)}</p>
+              <p>{data?.liquidity_score?.toFixed(2)}</p>
             </div>
           </div>
           {/* Price Change */}
